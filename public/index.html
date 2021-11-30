@@ -8,18 +8,18 @@
 </head>
 <body>
     <h1>AGREGAR PRODUCTO</h1>
-    <form action="productos" id="productos" method="post">
+    <form action="api/productos" id="api/productos" method="post">
         <div>
             <label for="nombre">nombre del producto</label>
-            <input type="text" name="producto[nombre]" id="nombre">
+            <input type="text" name="producto[title]" id="nombre">
         </div>
         <div>
             <label for="precio">precio</label>
-            <input type="number" name="producto[precio]" id="precio">
+            <input type="number" name="producto[price]" id="precio">
         </div>
         <div>
             <label for="foto">foto</label>
-            <input type="url" name="producto[foto]" id="foto">
+            <input type="text" name="producto[thumbnail]" id="foto">
         </div>
         <div>
             <button type="submit">Agregar</button>

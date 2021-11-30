@@ -6,15 +6,18 @@ const app =express()
 const router1= new Router()
 const id_router= new Router()
 
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
 const PORT=8080
-let Contenedor=require('./contenedor')
-let contenedor= new Contenedor('./productos.txt')
+let Contenedor=require('./components/contenedor/contenedor')
+let contenedor= new Contenedor('./components/products/productos.txt')
 
 app.get("/",(req,res)=>{
     res.send("primer servidor con express")
 })
 
-router1.get("/",async (req,res)=>{
+router1.get("/",async (req,res, next)=>{
     await contenedor.getAll().then(productos=>{
         if(productos){
             res.json(productos)
@@ -26,7 +29,19 @@ router1.get("/",async (req,res)=>{
     })
 })
 
-id_router.get("/:id",async (req,res)=>{
+router1.post("/",async (req,res, next)=>{
+    await contenedor.save(req.body.producto).then(productos=>{
+        if(productos){
+            res.json(productos)
+        }else{
+            res.json({"error":"id inexistente"})
+        }
+    }).catch(err=>{
+        res.send(err)
+    })
+})
+
+id_router.get("/:id",async (req,res, next)=>{
     let id= req.params.id
     await contenedor.getById(id).then(productId=>{
         if(productId){
@@ -39,7 +54,7 @@ id_router.get("/:id",async (req,res)=>{
     })
 })
 
-id_router.delete("/:id",async (req,res)=>{
+router1.delete("/:id",async (req,res,next)=>{
     let id= req.params.id
     await contenedor.deleteById(id).then(productId=>{
         if(productId){
@@ -49,6 +64,32 @@ id_router.delete("/:id",async (req,res)=>{
         }
     }).catch(error=>{
         res.send(error)
+    })
+})
+
+id_router.put("/:id",(req,res,next)=>{
+    //let idParametro= req.params.id
+    contenedor.getAll().then(x=>{
+        if (x.length>0) {
+            x.forEach(element => {
+                if (element.id==req.params.id) {
+                    let idPos=req.params.id-1
+                    let newProduct={
+                        id: req.params.id,
+                        title: "lentes",
+                        price: 2500,
+                        thumbnail: "url"
+                    }
+
+                    x.splice(idPos,1,newProduct)
+                    res.json(x)
+                } else {
+                    res.json({"error":"id inexistente"})  
+                }
+            });
+        }
+    }).catch(err=>{
+        res.send(err)
     })
 })
 
