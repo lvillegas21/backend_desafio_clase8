@@ -72,28 +72,30 @@ class Contenedor {
         }
     }
 
-    /* async update(id){
+    async update(id){
         try {
             let productos= await this.getAll()
             if (productos.length>0) {
                 productos.forEach(element => {
                     if (element.id==id) {
-                        let idPos=id-1
+                        let posId=id-1
                         let newProduct={
                             id: id,
                             title: "lentes",
                             price: 2500,
                             thumbnail: "url"
                         }
-                        productos.splice(idPos,1,newProduct)
+                        productos.splice(posId,1,newProduct)
                     }
                 });
             }
+            let cont=JSON.stringify(productos,null,2)
+            await fs.promises.writeFile(`${this.url}`, cont)
             return productos
         } catch (error) {
             console.log(error)
         }
-    } */
+    } 
 
     async deleteAll(){
         try {

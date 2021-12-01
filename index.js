@@ -67,31 +67,17 @@ router1.delete("/:id",async (req,res,next)=>{
     })
 })
 
-id_router.put("/:id",(req,res,next)=>{
-    //let idParametro= req.params.id
-    contenedor.getAll().then(x=>{
-        if (x.length>0) {
-            x.forEach(element => {
-                if (element.id==req.params.id) {
-                    let idPos=req.params.id-1
-                    let newProduct={
-                        id: req.params.id,
-                        title: "lentes",
-                        price: 2500,
-                        thumbnail: "url"
-                    }
-
-                    x.splice(idPos,1,newProduct)
-                    res.json(x)
-                } else {
-                    res.json({"error":"id inexistente"})  
-                }
-            });
-        }
+id_router.put("/:id",async (req,res,next)=>{
+    await contenedor.update(req.params.id).then(productos=>{
+       if (productos) {
+            res.json(productos) 
+       } else {
+            res.json({"error":"id inexistente"})
+       }
     }).catch(err=>{
         res.send(err)
     })
-})
+}) 
 
 
 app.use('/api/productos',router1)
